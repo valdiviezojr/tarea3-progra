@@ -1,0 +1,8 @@
+//
+// Created by User on 7/09/2026.
+//
+
+#ifndef CORENUMERIC_CORE_NUMERIC_H
+#define CORENUMERIC_CORE_NUMERIC_H
+
+#endif //CORENUMERIC_CORE_NUMERIC_H
