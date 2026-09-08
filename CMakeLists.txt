@@ -3,6 +3,6 @@ project(coreNumeric)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(coreNumeric main.cpp
+add_executable(coreNumeric
         core_numeric.h
         test.cpp)
