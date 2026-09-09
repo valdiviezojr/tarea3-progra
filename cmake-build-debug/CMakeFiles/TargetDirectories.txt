@@ -1,3 +1,0 @@
-/home/onenesz/Documents/utec/cursos/programacion-3/tareas/coreNumeric/cmake-build-debug/CMakeFiles/coreNumeric.dir
-/home/onenesz/Documents/utec/cursos/programacion-3/tareas/coreNumeric/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/onenesz/Documents/utec/cursos/programacion-3/tareas/coreNumeric/cmake-build-debug/CMakeFiles/rebuild_cache.dir
