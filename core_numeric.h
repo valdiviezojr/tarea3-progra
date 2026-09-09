@@ -40,6 +40,10 @@ namespace core_numeric {
         { a > b } -> std::convertible_to<bool>;
     };
 
+    //Concept adicional que restringe tipos numéricos en variadic
+    template <typename T>
+    concept NumericType = Addable<T> && Divisible<T>;
+
     // ALGORITMOS BÁSICOS
 
     template <Iterable C>
@@ -159,6 +163,52 @@ namespace core_numeric {
         }
 
         return resultado;
+    }
+
+    //---------------------------------------------------------------------------------------
+    // VARIADIC TEMPLATES, FOLD EXPRESSIONS e IF CONSTEXPR
+
+    template <Addable First, Addable... Args>
+    requires (std::same_as<First, Args> && ...)
+    auto sum_variadic(First first, Args... args) {
+        return (first + ... + args);
+    }
+
+    template <NumericType First, NumericType... Args>
+    requires (std::same_as<First, Args> && ...)
+    auto mean_variadic(First first, Args... args) {
+        constexpr std::size_t N = sizeof...(Args) + 1;
+        auto total = sum_variadic(first, args...);
+        return total / N;
+    }
+
+    template <NumericType First, NumericType... Args>
+    requires VarianceCompatible<First> && (std::same_as<First, Args> && ...)
+    auto variance_variadic(First first, Args... args) {
+        constexpr std::size_t N = sizeof...(Args) + 1;
+        auto mu = mean_variadic(first, args...);
+
+        // Suma usando fold expression
+        auto suma_cuadrados = (( (args - mu) * (args - mu) ) + ... + ((first - mu) * (first - mu)));
+
+        if constexpr (std::is_integral_v<First>) {
+            //Enteros -> división entera
+            return suma_cuadrados / N;
+        } else {
+            //Con decimales
+            return suma_cuadrados / static_cast<double>(N);
+        }
+    }
+
+    template <Comparable First, Comparable... Args>
+    requires (std::same_as<First, Args> && ...)
+    auto max_variadic(First first, Args... args) {
+        auto select_max = [](const auto& a, const auto& b) {
+            return (a > b) ? a : b;
+        };
+        First result = first;
+        ((result = select_max(result, args)), ...);
+        return result;
     }
 
 }

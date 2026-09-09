@@ -194,5 +194,60 @@ int main() {
         // Explicación: int no posee std::begin() ni std::end().
     */
 
+    //-------------------------------------------------------------------------
+    // PRUEBAS PERSONA 3 (variadic templates y if constexpr)
+
+    std::cout << "\n=== PRUEBAS VARIÁDICAS VÁLIDAS ===\n";
+
+    // 1. sum_variadic
+    auto s1 = core_numeric::sum_variadic(1, 2, 33, 4);
+    std::cout << "sum_variadic(1, 2, 33, 4): " << s1 << "\n"; // 40
+
+    // 2. mean_variadic
+    auto s2 = core_numeric::mean_variadic(2.0, 4.0, 6.0, 8.0);
+    std::cout << "mean_variadic(2.0, 4.0, 6.0, 8.0): " << s2 << "\n"; // 5.0
+
+    // 3. variance_variadic con if constexpr (flotante vs entero)
+    auto s3_float = core_numeric::variance_variadic(1.0, 2.0, 3.0, 4.0);
+    std::cout << "variance_variadic (double): " << s3_float << "\n"; // 1.25
+
+    auto s3_int = core_numeric::variance_variadic(1.0, 2.0, 3.0, 4.0);
+    std::cout << "variance_variadic (int - if constexpr): " << s3_int << "\n"; // 1
+
+    // 4. max_variadic
+    auto s4 = core_numeric::max_variadic(1.0, 2.7, 3.0, 0.4);
+    std::cout << "max_variadic(1.0, 2.7, 3.0, 0.4): " << s4 << "\n"; // 3.0
+
+
+    //-------------------------------------------------------------------------------------
+    // PRUEBAS INVÁLIDAS (casos de error de compilacion)
+
+    /*
+    // CASO V1: sum_variadic con tipos heterogéneos
+    auto err1 = core_numeric::sum_variadic(1, 2.5, 3);
+    // FALLA: Cláusula requires (std::same_as<First, Args> && ...)
+    // Explicación: Todos los argumentos pasados a la función variádica
+    // deben ser estrictamente del mismo tipo.
+    */
+
+    /*
+    // CASO V2: mean_variadic con tipo no numérico (sin operador /)
+    struct NoDivisible {
+        int val;
+        NoDivisible operator+(const NoDivisible& o) const { return {val + o.val}; }
+    };
+    auto err2 = core_numeric::mean_variadic(NoDivisible{1}, NoDivisible{2});
+    // FALLA: Concept 'NumericType' / 'Divisible'
+    // Explicación: El tipo NoDivisible soporta suma pero no soporta
+    // división por std::size_t.
+    */
+
+    /*
+    // CASO V3: max_variadic con std::string
+    auto err3 = core_numeric::max_variadic(std::string("a"), std::string("b"));
+    // FALLA: Concept 'Comparable'
+    // Explicación: El concepto Comparable impide el uso de std::string.
+    */
+
     return 0;
 }
